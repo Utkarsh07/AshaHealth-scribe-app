@@ -13,13 +13,73 @@ import ReviewPage from './pages/ReviewPage.tsx';
 
 const theme = createTheme({
   palette: {
+    background: {
+      default: "#f7f9fb",
+      paper: "#fff"
+    },
     primary: {
-      main: '#1976d2',
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e',
+      main: "#00bfae",
     },
+    text: {
+      primary: "#222",
+      secondary: "#6b6b6b"
+    }
   },
+  shape: {
+    borderRadius: 16,
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: "0 2px 16px 0 rgba(60,72,88,0.08)",
+          borderRadius: 16,
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          borderRadius: 12,
+          fontWeight: 600,
+        }
+      }
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          marginBottom: 8,
+          '&:before': { display: 'none' }
+        }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          background: "#f7f9fb",
+          borderRadius: 8,
+        }
+      }
+    }
+  },
+  typography: {
+    fontFamily: "Roboto, Arial, sans-serif",
+    h4: {
+      fontWeight: 700,
+      letterSpacing: "-0.5px",
+    },
+    h6: {
+      fontWeight: 600,
+    },
+    body1: {
+      fontSize: "1.1rem",
+    }
+  }
 });
 
 function App() {
@@ -28,14 +88,14 @@ function App() {
       <CssBaseline />
       <Router>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static">
+          <AppBar position="static" color="inherit" elevation={0} sx={{ borderBottom: "1px solid #e0e0e0" }}>
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: "#1976d2" }}>
                 Asha Health AI Medical Scribe
               </Typography>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="md" sx={{ mt: 6, mb: 6 }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/record" element={<RecordingPage />} />

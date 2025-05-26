@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, Paper, CircularProgress, Backdrop } from '@mui/material';
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import MicIcon from '@mui/icons-material/Mic';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import { config } from '../config.ts';
 
@@ -52,15 +54,10 @@ const RecordingPage: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append('file', audioBlob, 'recording.wav');
-
       const response = await axios.post(`${config.apiUrl}${config.endpoints.transcribe}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       if (response.data.success) {
-        // Store transcription in localStorage for the review page
         localStorage.setItem('transcription', response.data.transcription);
         navigate('/review');
       } else {
@@ -75,35 +72,36 @@ const RecordingPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
-        Record Medical Consultation
-      </Typography>
-
-      <Paper sx={{ p: 4, mt: 4, maxWidth: 600, mx: 'auto' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {error && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {error}
-            </Typography>
-          )}
-
-          <AudioRecorder
-            onRecordingComplete={handleAudioSubmission}
-            downloadOnSavePress={false}
-            downloadFileExtension="wav"
-          />
-
-          <Button
-            variant="outlined"
-            onClick={() => navigate('/')}
-            sx={{ mt: 4 }}
-          >
-            Back to Home
-          </Button>
-        </Box>
+    <Box sx={{ mt: 6 }}>
+      <Paper elevation={0} sx={{ p: 5, maxWidth: 520, mx: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <MicIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+        <Typography variant="h5" fontWeight={700} align="center" gutterBottom>
+          Record Medical Consultation
+        </Typography>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
+          Click the button below to start recording your conversation. When finished, click stop to process and generate a SOAP note.
+        </Typography>
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
+        <AudioRecorder
+          onRecordingComplete={handleAudioSubmission}
+          downloadOnSavePress={false}
+          downloadFileExtension="wav"
+          showVisualizer
+        />
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate('/')}
+          sx={{ mt: 2, width: '100%' }}
+        >
+          Back to Home
+        </Button>
       </Paper>
-
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isProcessing}

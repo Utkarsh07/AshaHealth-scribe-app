@@ -5,15 +5,18 @@ import {
   Button,
   Typography,
   Paper,
-  TextField,
   CircularProgress,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Backdrop,
+  Stack,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SaveIcon from '@mui/icons-material/Save';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 import { config } from '../config.ts';
 
 interface SOAPNote {
@@ -43,7 +46,6 @@ const ReviewPage: React.FC = () => {
       navigate('/');
       return;
     }
-
     generateSOAPNote(transcription);
   }, [navigate]);
 
@@ -52,11 +54,8 @@ const ReviewPage: React.FC = () => {
       const response = await axios.post(`${config.apiUrl}${config.endpoints.generateSoap}`, {
         text: transcription,
       }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
-
       if (response.data) {
         setSoapNote(response.data);
         setEditedNote(response.data);
@@ -82,8 +81,8 @@ const ReviewPage: React.FC = () => {
 
   const handleSave = async () => {
     if (!editedNote) return;
-
     try {
+      // Save logic here
       console.log('Saving edited note:', editedNote);
     } catch (err) {
       console.error('Error saving note:', err);
@@ -112,9 +111,9 @@ const ReviewPage: React.FC = () => {
 
   if (error) {
     return (
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Typography color="error">{error}</Typography>
-        <Button variant="contained" onClick={() => navigate('/')} sx={{ mt: 2 }}>
+      <Box sx={{ mt: 6, textAlign: 'center' }}>
+        <Typography color="error" sx={{ mb: 2 }}>{error}</Typography>
+        <Button variant="contained" onClick={() => navigate('/')} sx={{ mt: 2 }} startIcon={<ArrowBackIcon />}>
           Back to Home
         </Button>
       </Box>
@@ -122,79 +121,54 @@ const ReviewPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
+    <Box sx={{ mt: 6 }}>
+      <Typography variant="h4" component="h1" align="center" gutterBottom>
         Review SOAP Note
       </Typography>
-
-      <Paper sx={{ p: 4, mt: 4 }}>
+      <Paper elevation={0} sx={{ p: 5, mt: 4 }}>
         {editedNote && (
-          <>
-            <Accordion>
+          <Stack spacing={3}>
+            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Subjective</Typography>
+                <Typography variant="h6">Subjective</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <TextField
-                  fullWidth
-                  multiline
-                  value={editedNote.subjective}
-                  onChange={(e) => handleSectionEdit('subjective', e.target.value)}
-                />
+                <ReactMarkdown>{editedNote.subjective}</ReactMarkdown>
               </AccordionDetails>
             </Accordion>
-
-            <Accordion>
+            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Objective</Typography>
+                <Typography variant="h6">Objective</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <TextField
-                  fullWidth
-                  multiline
-                  value={editedNote.objective}
-                  onChange={(e) => handleSectionEdit('objective', e.target.value)}
-                />
+                <ReactMarkdown>{editedNote.objective}</ReactMarkdown>
               </AccordionDetails>
             </Accordion>
-
-            <Accordion>
+            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Assessment</Typography>
+                <Typography variant="h6">Assessment</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <TextField
-                  fullWidth
-                  multiline
-                  value={editedNote.assessment}
-                  onChange={(e) => handleSectionEdit('assessment', e.target.value)}
-                />
+                <ReactMarkdown>{editedNote.assessment}</ReactMarkdown>
               </AccordionDetails>
             </Accordion>
-
-            <Accordion>
+            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Plan</Typography>
+                <Typography variant="h6">Plan</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <TextField
-                  fullWidth
-                  multiline
-                  value={editedNote.plan}
-                  onChange={(e) => handleSectionEdit('plan', e.target.value)}
-                />
+                <ReactMarkdown>{editedNote.plan}</ReactMarkdown>
               </AccordionDetails>
             </Accordion>
-
-            <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'center' }}>
-              <Button variant="contained" onClick={handleSave}>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
+              <Button variant="contained" color="primary" size="large" startIcon={<SaveIcon />} onClick={handleSave}>
                 Save Changes
               </Button>
-              <Button variant="outlined" onClick={() => navigate('/')}>
+              <Button variant="outlined" color="primary" size="large" startIcon={<ArrowBackIcon />} onClick={() => navigate('/') }>
                 Back to Home
               </Button>
             </Box>
-          </>
+          </Stack>
         )}
       </Paper>
     </Box>
