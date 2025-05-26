@@ -161,9 +161,9 @@ const ReviewPage: React.FC = () => {
               </AccordionDetails>
             </Accordion>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
-              <Button variant="contained" color="primary" size="large" startIcon={<SaveIcon />} onClick={handleSave}>
+              {/* <Button variant="contained" color="primary" size="large" startIcon={<SaveIcon />} onClick={handleSave}>
                 Save Changes
-              </Button>
+              </Button> */}
               <Button variant="outlined" color="primary" size="large" startIcon={<ArrowBackIcon />} onClick={() => navigate('/') }>
                 Back to Home
               </Button>

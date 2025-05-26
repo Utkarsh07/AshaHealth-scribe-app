@@ -18,6 +18,20 @@ An AI-powered medical scribe system that automatically generates SOAP notes from
 - Audio Processing: Deepgram API
 - AI Note Generation: Google Gemini 2.0 Flash
 
+## Local Development with Docker
+
+1. Clone the repo and add your backend environment variables to `backend/.env`.
+2. Build and start both frontend and backend:
+   ```
+   docker-compose up --build
+   ```
+3. Access the app:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+4. To stop: `Ctrl+C`
+5. To remove containers: `docker-compose down`
+
+
 ## Setup Instructions
 
 ### Backend Setup
