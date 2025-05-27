@@ -90,7 +90,7 @@ function App() {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static" color="inherit" elevation={0} sx={{ borderBottom: "1px solid #e0e0e0" }}>
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: "#1976d2" }}>
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700, color: "#1976d2" }} onClick={() => window.location.href = '/'}>
                 Asha Health AI Medical Scribe
               </Typography>
             </Toolbar>

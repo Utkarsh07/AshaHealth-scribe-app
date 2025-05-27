@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -6,18 +6,22 @@ import {
   Typography,
   Paper,
   CircularProgress,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Backdrop,
   Stack,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
 import { config } from '../config.ts';
+import SOAPSection from '../components/SOAPSection.tsx';
+
+interface SourceSegment {
+  text: string;
+  source_text: string;
+  start_index: number;
+  end_index: number;
+  section: string;
+}
 
 interface SOAPNote {
   subjective: string;
@@ -25,12 +29,7 @@ interface SOAPNote {
   assessment: string;
   plan: string;
   confidence_score: number;
-  source_segments?: Array<{
-    section: string;
-    text: string;
-    start_time: number;
-    end_time: number;
-  }>;
+  source_segments: SourceSegment[];
 }
 
 const ReviewPage: React.FC = () => {
@@ -39,14 +38,21 @@ const ReviewPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [editedNote, setEditedNote] = useState<SOAPNote | null>(null);
+  const [originalTranscript, setOriginalTranscript] = useState<string>('');
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const transcription = localStorage.getItem('transcription');
     if (!transcription) {
       navigate('/');
       return;
     }
+    setOriginalTranscript(transcription);
     generateSOAPNote(transcription);
+    // eslint-disable-next-line
   }, [navigate]);
 
   const generateSOAPNote = async (transcription: string) => {
@@ -128,43 +134,32 @@ const ReviewPage: React.FC = () => {
       <Paper elevation={0} sx={{ p: 5, mt: 4 }}>
         {editedNote && (
           <Stack spacing={3}>
-            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">Subjective</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ReactMarkdown>{editedNote.subjective}</ReactMarkdown>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">Objective</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ReactMarkdown>{editedNote.objective}</ReactMarkdown>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">Assessment</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ReactMarkdown>{editedNote.assessment}</ReactMarkdown>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion defaultExpanded sx={{ background: '#f7f9fb' }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="h6">Plan</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <ReactMarkdown>{editedNote.plan}</ReactMarkdown>
-              </AccordionDetails>
-            </Accordion>
+            <SOAPSection
+              title="Subjective"
+              content={editedNote.subjective}
+              sourceSegments={editedNote.source_segments}
+              originalTranscript={originalTranscript}
+            />
+            <SOAPSection
+              title="Objective"
+              content={editedNote.objective}
+              sourceSegments={editedNote.source_segments}
+              originalTranscript={originalTranscript}
+            />
+            <SOAPSection
+              title="Assessment"
+              content={editedNote.assessment}
+              sourceSegments={editedNote.source_segments}
+              originalTranscript={originalTranscript}
+            />
+            <SOAPSection
+              title="Plan"
+              content={editedNote.plan}
+              sourceSegments={editedNote.source_segments}
+              originalTranscript={originalTranscript}
+            />
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}>
-              {/* <Button variant="contained" color="primary" size="large" startIcon={<SaveIcon />} onClick={handleSave}>
-                Save Changes
-              </Button> */}
-              <Button variant="outlined" color="primary" size="large" startIcon={<ArrowBackIcon />} onClick={() => navigate('/') }>
+              <Button variant="outlined" color="primary" size="large" startIcon={<ArrowBackIcon />} onClick={() => navigate('/')}>
                 Back to Home
               </Button>
             </Box>
