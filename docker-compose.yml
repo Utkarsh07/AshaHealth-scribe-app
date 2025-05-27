@@ -11,7 +11,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
-      - ALLOWED_ORIGINS=https://localhost
+      - ALLOWED_ORIGINS=http://44.215.42.143:3000,http://44.215.42.143
     restart: unless-stopped
 
   frontend:
@@ -21,7 +21,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      - REACT_APP_API_URL=http://13.220.177.213:3000
+      - REACT_APP_API_URL=http://44.215.42.143:8000
     depends_on:
       - backend
     restart: unless-stopped

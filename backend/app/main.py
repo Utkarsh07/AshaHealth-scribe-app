@@ -15,7 +15,7 @@ load_dotenv()
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://44.215.42.143:3000").split(",")
 
 app = FastAPI(title="Asha Health AI Medical Scribe API")
 
