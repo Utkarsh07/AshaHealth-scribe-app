@@ -11,7 +11,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
-      - ALLOWED_ORIGINS=http://localhost:80
+      - ALLOWED_ORIGINS=https://localhost
     restart: unless-stopped
 
   frontend:
